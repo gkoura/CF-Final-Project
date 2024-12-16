@@ -4,7 +4,7 @@ require("winston-mongodb");
 
 const { combine, timestamp, label, printf, colorize, json } = format;
 
-const CATEGORY = "winston custom format";
+const CATEGORY = "Logger";
 
 const fileRotateTransport = new transports.DailyRotateFile({
     filename: "logs/rotate-%DATE%.log",
@@ -21,10 +21,6 @@ const logger = createLogger({
     ),
     transports: [
         fileRotateTransport,
-        new transports.File({
-            level: "info",
-            filename: "logs/example.log",
-        }),
         new transports.File({
             level: "warn",
             filename: "logs/error.log",
