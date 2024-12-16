@@ -1,16 +1,24 @@
 const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
 
-// Middleware for parsing JSON
+const port = 3000;
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middleware
 app.use(express.json());
 
-// Basic route
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
+    .then(
+        () => { console.log('Connection to MongoDB established')},
+        err => { console.log('Failed to connect to MongoDB')}
+    );
+
+// Example route
 app.get('/', (req, res) => {
-  res.send('Hello, Express!');
+    res.send('MongoDB is connected to Express!');
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+module.exports = app;
