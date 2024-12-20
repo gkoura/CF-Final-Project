@@ -6,8 +6,8 @@ const swaggerUi = require("swagger-ui-express");
 
 const logger = require("./logger/logger");
 const { swaggerOptions } = require("./swagger/swagger");
-const requestLogger = require("./middlewares/requestLogger");
-const errorHandler = require("./middlewares/errorHandler");
+const requestLogger = require("./utils/requestLogger");
+const errorHandler = require("./utils/errorHandler");
 const app = express();
 
 // Validate environment variables
@@ -30,8 +30,9 @@ app.use(requestLogger);
 app.use(errorHandler);
 
 // MongoDB Connection
-mongoose.mongoose
-	.connect(process.env.MONGO_URI)
+mongoose
+	.connect(process.env.MONGO_URI, {
+	})
 	.then(() => {
 		logger.info("Connected to MongoDB.");
 	})
@@ -44,14 +45,9 @@ mongoose.mongoose
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerOptions));
 logger.info("Swagger API documentation available at /api-docs");
 
-// Health Check Route
-app.get("/", (req, res) => {
-	res.status(200).json({ message: "API is working!" });
-});
-
 // Load API Routes
-const routes = require("./routes");
-app.use("/api", routes);
+const userRoutes = require("./routes/userRoutes");
+app.use("/api", userRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
